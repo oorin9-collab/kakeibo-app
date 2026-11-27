@@ -12,9 +12,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class RecordController {
@@ -27,7 +27,7 @@ public class RecordController {
     // 収支情報取得API：GET /summary?year=2026&month=11
     @GetMapping("/summary")
     public SummaryResponse summary(@RequestParam int year, @RequestParam int month,
-                                   HttpServletRequest request) {
+            HttpServletRequest request) {
         Long userId = AuthUtil.requireUserId(request);
         YearMonth ym = YearMonth.of(year, month);
         long income = recordRepository.sumAmount(userId, MoneyRecord.TYPE_INCOME, ym.atDay(1), ym.atEndOfMonth());
@@ -63,7 +63,7 @@ public class RecordController {
     // 収支一覧取得API：GET /records?year=2026&month=11
     @GetMapping("/records")
     public List<RecordResponse> records(@RequestParam int year, @RequestParam int month,
-                                        HttpServletRequest request) {
+            HttpServletRequest request) {
         Long userId = AuthUtil.requireUserId(request);
         YearMonth ym = YearMonth.of(year, month);
         return recordRepository
@@ -74,15 +74,26 @@ public class RecordController {
     // 収支情報更新API：PUT /records/{id}
     @PutMapping("/records/{id}")
     public RecordResponse update(@PathVariable Long id, @Valid @RequestBody RecordRequest req,
-                                 HttpServletRequest request) {
+            HttpServletRequest request) {
         Long userId = AuthUtil.requireUserId(request);
         MoneyRecord r = recordRepository.findById(id)
-                .filter(rec -> rec.getUserId().equals(userId))
+                .filter(rec -> Objects.equals(rec.getUserId(), userId))
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "対象データがありません"));
         r.setAmount(req.amount());
         r.setRecordDate(req.recordDate());
         r.setCategory(req.category());
         r.setMemo(req.memo());
         return RecordResponse.from(recordRepository.save(r));
+    }
+
+    // 収支情報削除API：DELETE /records/{id}（204）
+    @DeleteMapping("/records/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id, HttpServletRequest request) {
+        Long userId = AuthUtil.requireUserId(request);
+        MoneyRecord r = recordRepository.findById(id)
+                .filter(rec -> Objects.equals(rec.getUserId(), userId))
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "対象データがありません"));
+        recordRepository.delete(r);
     }
 }

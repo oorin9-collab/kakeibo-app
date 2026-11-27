@@ -32,6 +32,16 @@ export default function Records() {
     }
   }
 
+  async function handleDelete(r) {
+    if (!window.confirm('この記録を削除しますか？')) return
+    try {
+      await api.deleteRecord(r.recordId)
+      load()
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
   return (
     <div>
       <h1>収支一覧（{year}年{month}月）</h1>
@@ -48,7 +58,7 @@ export default function Records() {
               <td>{r.category || ''}</td>
               <td className="num">{yen(r.amount)}</td>
               <td>{r.memo || ''}</td>
-              <td><button onClick={() => setEditing({ ...r })}>編集</button></td>
+              <td><button onClick={() => setEditing({ ...r })}>編集</button>{' '}<button onClick={() => handleDelete(r)}>削除</button></td>
             </tr>
           ))}
           {records.length === 0 && <tr><td colSpan="6">この月の記録はありません</td></tr>}

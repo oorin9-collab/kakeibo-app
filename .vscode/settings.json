@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-25",
+      "path": "C:\\pleiades\\2026-06\\java\\25",
+      "default": true
+    }
+  ],
+  "java.compile.nullAnalysis.mode": "automatic"
+}

@@ -1,0 +1,1 @@
+{"configurations":[{"cwd":"${workspaceFolder}","mainClass":"com.example.kakeibo.KakeiboApplication","name":"バックエンドを起動（KakeiboApplication）","projectName":"kakeibo","request":"launch","type":"java"}],"version":"0.2.0"}

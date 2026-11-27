@@ -15,6 +15,18 @@
 できるだけシンプルに誰でも一目で操作方法がわかるように工夫しました
 初めて自身で制作したので何度もエラーの原因を調べたり解決方法をAIに聞きながら制作しました
 
+## スクリーンショット
+
+![alt text](images/ホーム.png)
+
+![alt text](images/ログイン.png)
+
+![alt text](images/支出.png)
+
+![alt text](images/収支.png)
+
+![alt text](images/収入.png)
+
 ## 主な機能
 
 - ログイン認証
